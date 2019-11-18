@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Android与JavaScript交互演示</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .title {
+            position: relative;
+            padding: 10px 15px;
+            font-weight: normal;
+            font-size: 18px;
+            color: #636669;
+        }
+
+        .title::before {
+            content: "";
+            position: absolute;
+            width: 5px;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: #1979ff;
+        }
+
+        .box {
+            padding: 10px 15px;
+            color: #636669;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #edeff1;
+        }
+
+        .btns {
+            padding: 5px 0;
+            display: flex;
+            /* justify-content: center; */
+            align-items: center;
+        }
+
+        .item {
+            display: inline-block;
+            padding: 5px 10px;
+            border: 1px solid #636669;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-right: 8px;
+            font-size: 13px;
+        }
+
+        .item:last-child {
+            margin-right: 0;
+        }
+    </style>
+</head>
+
+<body>
+<h3 class="title">Android 与 JavaScript 常用交互</h3>
+
+<div class="box">
+    <div class="subtitle">WebView使用进阶</div>
+    <div class="btns"></div>
+    <div class="item" id="cookiebtn" onclick="cookiebtn()">SyncCookie</div>
+    <div class="item" id="uabtn" onclick="readUserAgent()">UserAgent</div>
+
+</div>
+
+<div class="box">
+    <div class="subtitle">Js 调用 Android 中的方法：</div>
+    <div class="btns"></div>
+    <div class="item" id="loginbtn" onclick="qihooLogin({'mobile':'18888888888', 'code':'123456'})">
+        方式1
+    </div>
+    <div class="item" id="interceptbtn" onclick="qihooLogin2()">方式2</div>
+    <div class="item" id="intercept2btn" onclick="qihooLogin3()">方式3</div>
+
+</div>
+
+<div class="box">
+    <div class="subtitle">Js 打开 Native 页面：</div>
+    <div class="btns"></div>
+    <div class="item" id="callNativeMode1" onclick="callHostNativePage(1)">模式1</div>
+    <div class="item" id="callNativeMode2" onclick="callHostNativePage(2)">模式2</div>
+    <div class="item" id="callNativeMode3" onclick="callHostNativePage(3)">模式3</div>
+</div>
+</div>
+<div class="box">
+    <div class="subtitle">跳转到第三方App：</div>
+    <div class="btns"></div>
+    <div class="item" id="jumpThird3" onclick="jumpThird()">模式3</div>
+</div>
+</div>
+<script>
+        /**
+         * alert cookie
+         **/
+        function cookiebtn() {
+            var x = document.cookie;
+            alert(x)
+        };
+
+        /**
+         * 登录
+         * 参数：String json
+         **/
+        function qihooLogin(json) {
+            json ? json : {};
+            AndroidJsInterface.login(JSON.stringify(json))
+        };
+
+        function callHostNativePage(type) {
+            var json = {
+                mode: 1,
+                classNamePath: null,
+                actionPath: null,
+                schemePath: null,
+                param: null
+            };
+
+            if (type == 1) {
+                json.mode = 1;
+                json.classNamePath = 'com.qiwoo.androidjs.FriendDetailActivity';
+                json.param = {
+                    'mobile': '13333333333',
+                    'name': 'snow'
+                }
+            } else if (type == 2) {
+                json.mode = 2;
+                json.actionPath = 'open_friend_detail';
+                json.param = {
+                    'mobile': '13333333333',
+                    'name': 'snow'
+                }
+            } else if (type == 3) {
+                json.mode = 3;
+                json.schemePath = 'app://qihoo.com/FriendDetailActivity';
+                json.param = {
+                    'mobile': '13333333333',
+                    'name': 'snow'
+                }
+            }
+
+            alert(JSON.stringify(json.param))
+
+            AndroidJsInterface.callHostNativePage(json.mode, json.classNamePath, json.actionPath, json.schemePath, JSON
+                .stringify(json.param));
+        }
+
+        function qihooLogin2() {
+            document.location = "qihoo://login?mobile=13333333333&code=123456";
+        }
+
+        function qihooLogin3() {
+            var result = prompt("qihoo://login?mobile=13333333333&code=123456");
+            alert(result);
+        }
+
+        // 跳转第三方--参数如上
+        function jumpThird() {
+            var classNamePath = 'com.xzx.yidu.activity.SplashActivity';
+            AndroidJsInterface.openNativeApp('com.xzx.yidu', classNamePath);
+        }
+
+        //读取cookies
+        function getCookie(name) {
+            var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+            if (arr = document.cookie.match(reg)) {
+                return unescape(arr[2]);
+            } else {
+                return null;
+            }
+        }
+
+        //改变背景色
+        function updateBackgroundColor(color) {
+            document.body.style.backgroundColor = color;
+        }
+
+        //读取背景颜色
+        function readBackgroundColor() {
+            return getHexColor()
+        }
+
+        function getHexColor() {
+            var str = [];
+            var rgb = document.body.style.backgroundColor.split('(');
+            for (var k = 0; k < 3; k++) {
+                str[k] = parseInt(rgb[1].split(',')[k]).toString(16);
+            }
+            str = '#' + str[0] + str[1] + str[2];
+            return str;
+        }
+
+        //读取UA
+        function readUserAgent() {
+            var ua = navigator.userAgent;
+            alert(ua)
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="45dp"
+        android:layout_marginRight="45dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/friend_detail_note"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:id="@+id/tv_note_tip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="用户名"
+                android:textColor="@color/gray_text_color"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/tv_note_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_note_tip"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/gray_text_color"
+                android:textSize="16dp"
+                tools:text="Marguerite Bridges" />
+
+        </RelativeLayout>
+
+        <View style="@style/HorizontalLine" />
+
+        <RelativeLayout
+            android:id="@+id/setting_phone"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:id="@+id/tv_phone_tip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="电话"
+                android:textColor="@color/gray_text_color"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/tv_phone_no"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_phone_tip"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/gray_text_color"
+                android:textSize="16dp"
+                tools:text="13333333333" />
+
+        </RelativeLayout>
+
+        <View style="@style/HorizontalLine" />
+    </LinearLayout>
+
+</LinearLayout>
